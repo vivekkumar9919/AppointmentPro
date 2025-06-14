@@ -37,7 +37,7 @@ const appointmentService = {
         }
     ],
 
-    getAppointmentsResponse : {
+    getAppointmentsResponse: {
         "results": [
             {
                 "id": 2,
@@ -66,7 +66,7 @@ const appointmentService = {
             "page_size": 2
         }
     },
-    getDoctorsResponse :{
+    getDoctorsResponse: {
         "results": [
             {
                 "id": 2,
