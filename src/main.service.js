@@ -1,7 +1,7 @@
 import { callApi } from './Utility/apiClient';
 import { API_URLS } from './url';
 
-const isDev = true;
+const isDev = false;
 
 const appointmentService = {
     doctors: [
@@ -37,20 +37,72 @@ const appointmentService = {
         }
     ],
 
-    async getAppointments() {
+    getAppointmentsResponse : {
+        "results": [
+            {
+                "id": 2,
+                "doctor_name": "Dr. Akhil",
+                "patient_name": "Aryan",
+                "date": "2025-06-14",
+                "time_slot": "11:30 AM",
+                "status": "Completed",
+                "doctor": 2
+            },
+            {
+                "id": 1,
+                "doctor_name": "Dr. Vivek",
+                "patient_name": "Shivam",
+                "date": "2025-06-14",
+                "time_slot": "10:00 AM",
+                "status": "Scheduled",
+                "doctor": 1
+            }
+        ],
+        "pages": {
+            "total_count": 2,
+            "has_next": false,
+            "previous": null,
+            "pageNumber": 1,
+            "page_size": 2
+        }
+    },
+    getDoctorsResponse :{
+        "results": [
+            {
+                "id": 2,
+                "name": "Dr. Akhil",
+                "specialization": "Dermatology"
+            },
+            {
+                "id": 1,
+                "name": "Dr. Vivek",
+                "specialization": "Cardiology"
+            }
+        ],
+        "pages": {
+            "total_count": 2,
+            "has_next": false,
+            "previous": null,
+            "pageNumber": 1,
+            "page_size": 10
+        }
+    },
+
+    async getAppointments(params = {}) {
         if (isDev) {
-            return Promise.resolve(this.appointments);
+            return Promise.resolve(this.getAppointmentsResponse);
         }
 
         return callApi({
             url: API_URLS.GET_APPOINTMENTS,
             method: 'GET',
+            params
         });
     },
 
     async getDoctors() {
         if (isDev) {
-            return Promise.resolve(this.doctors);
+            return Promise.resolve(this.getDoctorsResponse);
         }
         return callApi({
             url: API_URLS.GET_DOCTORS,

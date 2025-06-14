@@ -2,10 +2,11 @@ import React from 'react';
 import StatCard from './common/StatCards';
 
 const StatsCards = ({ appointments }) => {
-  const totalAppointments = appointments.length;
-  const confirmedAppointments = appointments.filter(apt => apt.status === 'confirmed').length;
-  const pendingAppointments = appointments.filter(apt => apt.status === 'pending').length;
-
+  console.log("appointments data in StatsCards", {appointments})
+  const totalAppointments = appointments?.length || 0;
+  const confirmedAppointments = appointments.filter(apt => apt.status === 'confirmed')?.length || 0;
+  const pendingAppointments = appointments.filter(apt => apt.status === 'pending')?.length || 0;
+  
   const stats = [
     {
       bgColor: 'bg-primary',
