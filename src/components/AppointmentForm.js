@@ -3,10 +3,10 @@ import appointmentService from '../main.service'
 
 const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
     const [formData, setFormData] = useState({
-      patientName: '',
+      patient_name: '',
       doctorId: '',
       date: '',
-      time: '',
+      time_slot: '',
       phone: '',
       email: ''
     });
@@ -23,8 +23,8 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
           .then(slots => {
             setAvailableTimeSlots(slots);
             // Clear selected time if it's no longer available
-            if (formData.time && !slots.includes(formData.time)) {
-              setFormData(prev => ({ ...prev, time: '' }));
+            if (formData.time_slot && !slots.includes(formData.time_slot)) {
+              setFormData(prev => ({ ...prev, time_slot: '' }));
             }
           })
           .finally(() => setLoadingTimeSlots(false));
@@ -42,10 +42,10 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
     const validateForm = () => {
       const newErrors = {};
       
-      if (!formData.patientName.trim()) newErrors.patientName = 'Patient name is required';
+      if (!formData.patient_name.trim()) newErrors.patient_name = 'Patient name is required';
       if (!formData.doctorId) newErrors.doctorId = 'Please select a doctor';
       if (!formData.date) newErrors.date = 'Date is required';
-      if (!formData.time) newErrors.time = 'Please select a time slot';
+      if (!formData.time_slot) newErrors.time_slot = 'Please select a time slot';
       if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
       if (!formData.email.trim()) newErrors.email = 'Email is required';
       else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
@@ -71,7 +71,7 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
           });
         } catch (error) {
           if (error.message.includes('no longer available')) {
-            setErrors({ time: 'This time slot is no longer available. Please select another time.' });
+            setErrors({ time_slot: 'This time slot is no longer available. Please select another time.' });
             // Refresh available slots
             if (formData.doctorId && formData.date) {
               const slots = await appointmentService.getAvailableTimeSlots(formData.doctorId, formData.date);
@@ -110,13 +110,13 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
                   <label className="form-label">Patient Name *</label>
                   <input
                     type="text"
-                    name="patientName"
-                    className={`form-control ${errors.patientName ? 'is-invalid' : ''}`}
-                    value={formData.patientName}
+                    name="patient_name"
+                    className={`form-control ${errors.patient_name ? 'is-invalid' : ''}`}
+                    value={formData.patient_name}
                     onChange={handleChange}
                     placeholder="Enter patient name"
                   />
-                  {errors.patientName && <div className="invalid-feedback">{errors.patientName}</div>}
+                  {errors.patient_name && <div className="invalid-feedback">{errors.patient_name}</div>}
                 </div>
                 
                 <div className="col-md-6">
@@ -169,9 +169,9 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
                     </div>
                   ) : (
                     <select
-                      name="time"
-                      className={`form-select ${errors.time ? 'is-invalid' : ''}`}
-                      value={formData.time}
+                      name="time_slot"
+                      className={`form-select ${errors.time_slot ? 'is-invalid' : ''}`}
+                      value={formData.time_slot}
                       onChange={handleChange}
                     >
                       <option value="">Select time slot...</option>
@@ -180,7 +180,7 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
                       ))}
                     </select>
                   )}
-                  {errors.time && <div className="invalid-feedback">{errors.time}</div>}
+                  {errors.time_slot && <div className="invalid-feedback">{errors.time_slot}</div>}
                 </div>
                 
                 <div className="col-md-6">

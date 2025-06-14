@@ -1,5 +1,5 @@
 import { callApi } from './Utility/apiClient';
-
+import { API_URLS } from './url';
 
 const isDev = true;
 
@@ -18,37 +18,22 @@ const appointmentService = {
 
     appointments: [
         {
-            id: 1,
-            patientName: "John Doe",
-            doctorId: 1,
-            doctorName: "Dr. Smith",
-            date: "2025-06-15",
-            time: "09:00",
-            phone: "+1234567890",
-            email: "john@example.com",
-            status: "confirmed"
+            "id": 1,
+            "doctor_name": "Dr. Vivek",
+            "patient_name": "Shivam",
+            "date": "2025-06-14",
+            "time_slot": "10:00 AM",
+            "status": "Scheduled",
+            "doctor": 1
         },
         {
-            id: 2,
-            patientName: "Jane Wilson",
-            doctorId: 2,
-            doctorName: "Dr. Johnson",
-            date: "2025-06-15",
-            time: "10:30",
-            phone: "+1234567891",
-            email: "jane@example.com",
-            status: "pending"
-        },
-        {
-            id: 3,
-            patientName: "Mike Brown",
-            doctorId: 1,
-            doctorName: "Dr. Smith",
-            date: "2025-06-16",
-            time: "14:00",
-            phone: "+1234567892",
-            email: "mike@example.com",
-            status: "confirmed"
+            "id": 2,
+            "doctor_name": "Dr. Akhil",
+            "patient_name": "Aryan",
+            "date": "2025-06-14",
+            "time_slot": "11:30 AM",
+            "status": "Completed",
+            "doctor": 2
         }
     ],
 
@@ -58,7 +43,7 @@ const appointmentService = {
         }
 
         return callApi({
-            url: 'https://api.example.com/appointments',
+            url: API_URLS.GET_APPOINTMENTS,
             method: 'GET',
         });
     },
@@ -68,7 +53,7 @@ const appointmentService = {
             return Promise.resolve(this.doctors);
         }
         return callApi({
-            url: 'https://api.example.com/appointments',
+            url: API_URLS.GET_DOCTORS,
             method: 'GET',
         });
     },
@@ -80,7 +65,7 @@ const appointmentService = {
     getAvailableTimeSlots(doctorId, date) {
         const bookedSlots = this.appointments
             .filter(apt => apt.doctorId === parseInt(doctorId) && apt.date === date)
-            .map(apt => apt.time);
+            .map(apt => apt.time_slot);
 
         const availableSlots = this.timeSlots.filter(slot => !bookedSlots.includes(slot));
         return Promise.resolve(availableSlots);
@@ -91,7 +76,7 @@ const appointmentService = {
         const isSlotTaken = this.appointments.some(apt =>
             apt.doctorId === appointment.doctorId &&
             apt.date === appointment.date &&
-            apt.time === appointment.time
+            apt.time_slot === appointment.time_slot
         );
 
         if (isSlotTaken) {

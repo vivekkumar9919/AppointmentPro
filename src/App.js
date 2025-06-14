@@ -35,6 +35,7 @@ const App = () => {
         appointmentService.getAppointments(),
         appointmentService.getDoctors()
       ]);
+      console.log("appointmentsData and doctorsData" ,  {appointmentsData, doctorsData})
       setAppointments(appointmentsData);
       setDoctors(doctorsData);
     } catch (error) {
@@ -48,7 +49,7 @@ const App = () => {
     let filtered = appointments;
 
     if (filters.doctor) {
-      filtered = filtered.filter(apt => apt.doctorName === filters.doctor);
+      filtered = filtered.filter(apt => apt.doctor_name === filters.doctor);
     }
 
     if (filters.date) {
