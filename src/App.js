@@ -14,7 +14,7 @@ const App = () => {
   const [showForm, setShowForm] = useState(false);
   const [filters, setFilters] = useState({
     doctor: '',
-    date: '',
+    date: new Date().toISOString().split("T")[0],
   });
 
   const [page, setPage] = useState(1);
