@@ -5,6 +5,7 @@ import Header from './components/Header';
 import FilterBar from './components/FilterBar';
 import AppointmentForm from './components/AppointmentForm';
 import AppointmentList from './components/AppointmentList';
+import ToastMessage from './components/common/ToastMessage';
 import config from './config';
 
 const App = () => {
@@ -19,6 +20,8 @@ const App = () => {
 
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({});
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+
   const pageSize = config.DEFAULT_PAGE_SIZE || 10;
 
   // Initial load and reload on filter/page change
@@ -69,13 +72,19 @@ const App = () => {
       setPage(prev => prev - 1);
     }
   };
+  const showToast = (message, type = 'success') => {
+    setToast({ show: true, message, type });
+  };
 
   const handleCreateAppointment = async (appointmentData) => {
     try {
-      await appointmentService.createAppointment(appointmentData);
+      const response = await appointmentService.createAppointment(appointmentData);
+      console.log("appointmentData is ---------", { appointmentData, response });
       loadData({ ...filters, page, page_size: pageSize });
+      showToast('Appointment created successfully!', 'success');
       setShowForm(false);
     } catch (error) {
+      showToast('Failed to create appointment.', 'danger');
       throw error;
     }
   };
@@ -83,7 +92,13 @@ const App = () => {
   return (
     <div className="min-vh-100 bg-light">
       <Header onCreateClick={() => setShowForm(true)} />
-
+      {toast.show && (
+        <ToastMessage
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast({ ...toast, show: false })}
+        />
+      )}
       <div className="container py-4">
         <div className="mb-4">
           <h2 className="h3 mb-2">

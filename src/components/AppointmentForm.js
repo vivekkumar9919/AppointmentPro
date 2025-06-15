@@ -4,11 +4,10 @@ import appointmentService from '../main.service'
 const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
     const [formData, setFormData] = useState({
         patient_name: '',
-        doctorId: '',
+        doctor: '',
         date: '',
         time_slot: '',
-        phone: '',
-        email: ''
+        status: "Scheduled",
     });
 
     const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
@@ -17,9 +16,9 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
 
     // Get available time slots when doctor and date are selected
     useEffect(() => {
-        if (formData.doctorId && formData.date) {
+        if (formData.doctor && formData.date) {
             setLoadingTimeSlots(true);
-            appointmentService.getAvailableTimeSlots(formData.doctorId, formData.date)
+            appointmentService.getAvailableTimeSlots(formData.doctor, formData.date)
                 .then(slots => {
                     setAvailableTimeSlots(slots);
                     // Clear selected time if it's no longer available
@@ -29,7 +28,7 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
                 })
                 .finally(() => setLoadingTimeSlots(false));
         }
-    }, [formData.doctorId, formData.date]);
+    }, [formData.doctor, formData.date]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -43,13 +42,9 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
         const newErrors = {};
 
         if (!formData.patient_name.trim()) newErrors.patient_name = 'Patient name is required';
-        if (!formData.doctorId) newErrors.doctorId = 'Please select a doctor';
+        if (!formData.doctor) newErrors.doctor = 'Please select a doctor';
         if (!formData.date) newErrors.date = 'Date is required';
         if (!formData.time_slot) newErrors.time_slot = 'Please select a time slot';
-        if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
-        if (!formData.email.trim()) newErrors.email = 'Email is required';
-        else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
-
         // Check if selected date is in the past
         const selectedDate = new Date(formData.date);
         const today = new Date();
@@ -67,14 +62,14 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
             try {
                 await onSubmit({
                     ...formData,
-                    doctorId: parseInt(formData.doctorId)
+                    doctor: parseInt(formData.doctor)
                 });
             } catch (error) {
                 if (error.message.includes('no longer available')) {
                     setErrors({ time_slot: 'This time slot is no longer available. Please select another time.' });
                     // Refresh available slots
-                    if (formData.doctorId && formData.date) {
-                        const slots = await appointmentService.getAvailableTimeSlots(formData.doctorId, formData.date);
+                    if (formData.doctor && formData.date) {
+                        const slots = await appointmentService.getAvailableTimeSlots(formData.doctor, formData.date);
                         setAvailableTimeSlots(slots);
                     }
                 }
@@ -84,7 +79,7 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
 
     const getTomorrowDate = () => {
         const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setDate(tomorrow.getDate());
         return tomorrow.toISOString().split('T')[0];
     };
 
@@ -122,9 +117,9 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
                             <div className="col-md-6">
                                 <label className="form-label">Select Doctor *</label>
                                 <select
-                                    name="doctorId"
-                                    className={`form-select ${errors.doctorId ? 'is-invalid' : ''}`}
-                                    value={formData.doctorId}
+                                    name="doctor"
+                                    className={`form-select ${errors.doctor ? 'is-invalid' : ''}`}
+                                    value={formData.doctor}
                                     onChange={handleChange}
                                 >
                                     <option value="">Choose a doctor...</option>
@@ -134,7 +129,7 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
                                         </option>
                                     ))}
                                 </select>
-                                {errors.doctorId && <div className="invalid-feedback">{errors.doctorId}</div>}
+                                {errors.doctor && <div className="invalid-feedback">{errors.doctor}</div>}
                             </div>
 
                             <div className="col-md-6">
@@ -152,7 +147,7 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
 
                             <div className="col-12">
                                 <label className="form-label">Available Time Slots *</label>
-                                {!formData.doctorId || !formData.date ? (
+                                {!formData.doctor || !formData.date ? (
                                     <div className="alert alert-info">
                                         <span className="me-2">ℹ️</span>
                                         Please select a doctor and date first to see available time slots.
@@ -183,31 +178,7 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
                                 {errors.time_slot && <div className="invalid-feedback">{errors.time_slot}</div>}
                             </div>
 
-                            <div className="col-md-6">
-                                <label className="form-label">Phone Number *</label>
-                                <input
-                                    type="tel"
-                                    name="phone"
-                                    className={`form-control ${errors.phone ? 'is-invalid' : ''}`}
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                    placeholder="Enter phone number"
-                                />
-                                {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
-                            </div>
-
-                            <div className="col-md-6">
-                                <label className="form-label">Email Address *</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    placeholder="Enter email address"
-                                />
-                                {errors.email && <div className="invalid-feedback">{errors.email}</div>}
-                            </div>
+  
                         </div>
                     </div>
 
@@ -223,7 +194,7 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
                             type="button"
                             className="btn btn-primary"
                             onClick={handleSubmit}
-                            disabled={!formData.doctorId || !formData.date || availableTimeSlots.length === 0}
+                            disabled={!formData.doctor || !formData.date || availableTimeSlots.length === 0}
                         >
                             <span className="me-1">✅</span>
                             Book Appointment

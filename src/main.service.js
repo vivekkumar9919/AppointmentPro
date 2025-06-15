@@ -87,6 +87,20 @@ const appointmentService = {
             "page_size": 10
         }
     },
+    createAppointmentResponse:{
+        "status_code": 201,
+        "message": "Appointment created successfully",
+        "error": null,
+        "data": {
+            "id": 6,
+            "doctor_name": "Dr. Vivek",
+            "patient_name": "Rakesh 2",
+            "date": "2025-06-15",
+            "time_slot": "1:30:00",
+            "status": "Scheduled",
+            "doctor": 1
+        }
+    },
 
     async getAppointments(params = {}) {
         if (isDev) {
@@ -123,28 +137,15 @@ const appointmentService = {
         return Promise.resolve(availableSlots);
     },
 
-    createAppointment(appointment) {
-        // Check if slot is still available
-        const isSlotTaken = this.appointments.some(apt =>
-            apt.doctorId === appointment.doctorId &&
-            apt.date === appointment.date &&
-            apt.time_slot === appointment.time_slot
-        );
-
-        if (isSlotTaken) {
-            return Promise.reject(new Error('Time slot is no longer available'));
+    async createAppointment(appointment){
+        if(isDev){
+            return Promise.resolve(this.createAppointmentResponse);
         }
-
-        const doctor = this.doctors.find(d => d.id === appointment.doctorId);
-        const newAppointment = {
-            ...appointment,
-            id: this.appointments.length + 1,
-            doctorName: doctor.name,
-            status: "pending"
-        };
-
-        this.appointments.push(newAppointment);
-        return Promise.resolve(newAppointment);
+        return callApi({
+            url: API_URLS.CREATEAPPOINTMENT,
+            method: 'POST',
+            body:appointment
+        });
     }
 };
 
