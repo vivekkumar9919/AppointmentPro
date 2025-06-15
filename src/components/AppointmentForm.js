@@ -17,18 +17,41 @@ const AppointmentForm = ({ onSubmit, onCancel, doctors }) => {
     // Get available time slots when doctor and date are selected
     useEffect(() => {
         if (formData.doctor && formData.date) {
-            setLoadingTimeSlots(true);
-            appointmentService.getAvailableTimeSlots(formData.doctor, formData.date)
-                .then(slots => {
-                    setAvailableTimeSlots(slots);
-                    // Clear selected time if it's no longer available
-                    if (formData.time_slot && !slots.includes(formData.time_slot)) {
-                        setFormData(prev => ({ ...prev, time_slot: '' }));
-                    }
-                })
-                .finally(() => setLoadingTimeSlots(false));
+          setLoadingTimeSlots(true);
+      
+          const fetchSlots = async () => {
+            try {
+              const appointments = await appointmentService.getAppointments({
+                doctor: formData?.doctor,
+                date: formData?.date,
+              });
+      
+              console.log("Appointments data for slots:", appointments.results);
+      
+              const slots = await appointmentService.getAvailableTimeSlots(
+                formData?.doctor,
+                formData?.date,
+                appointments.results
+              );
+      
+              setAvailableTimeSlots(slots);
+      
+              // Clear selected time if it's no longer available
+              if (formData.time_slot && !slots.includes(formData.time_slot)) {
+                setFormData(prev => ({ ...prev, time_slot: '' }));
+              }
+      
+            } catch (err) {
+              console.error("Error fetching time slots:", err);
+            } finally {
+              setLoadingTimeSlots(false);
+            }
+          };
+      
+          fetchSlots();
         }
-    }, [formData.doctor, formData.date]);
+      }, [formData.doctor, formData.date]);
+      
 
     const handleChange = (e) => {
         const { name, value } = e.target;

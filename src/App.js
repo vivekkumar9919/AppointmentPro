@@ -13,11 +13,7 @@ const App = () => {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [filters, setFilters] = useState({
-    doctor: '',
-    date: new Date().toISOString().split("T")[0],
-  });
-
+  const [filters, setFilters] = useState({doctor: '',date: new Date().toISOString().split("T")[0]});
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState({});
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
@@ -72,10 +68,12 @@ const App = () => {
       setPage(prev => prev - 1);
     }
   };
+  // show toast
   const showToast = (message, type = 'success') => {
     setToast({ show: true, message, type });
   };
 
+  // handle create Appointment
   const handleCreateAppointment = async (appointmentData) => {
     try {
       const response = await appointmentService.createAppointment(appointmentData);
@@ -91,7 +89,10 @@ const App = () => {
 
   return (
     <div className="min-vh-100 bg-light">
+      {/* Headers */}
       <Header onCreateClick={() => setShowForm(true)} />
+      
+      {/* Toast Messages */}
       {toast.show && (
         <ToastMessage
           message={toast.message}
@@ -99,6 +100,7 @@ const App = () => {
           onClose={() => setToast({ ...toast, show: false })}
         />
       )}
+
       <div className="container py-4">
         <div className="mb-4">
           <h2 className="h3 mb-2">
@@ -108,8 +110,10 @@ const App = () => {
           <p className="text-muted">Manage and view all your appointments in one place.</p>
         </div>
 
+        {/* Appointment stats Cards */}
         <StatsCards appointments={appointments} />
 
+        {/* Appointment filters */}
         <FilterBar
           filters={filters}
           onFilterChange={handleFilterChange}
@@ -117,7 +121,7 @@ const App = () => {
           doctors={doctors}
         />
 
-        {/* Pass pagination handlers and data to child */}
+        {/* Appointment list */}
         <AppointmentList
           appointments={appointments}
           loading={loading}
@@ -128,6 +132,7 @@ const App = () => {
         />
       </div>
 
+        {/* Appointment form */}
       {showForm && (
         <AppointmentForm
           onSubmit={handleCreateAppointment}
@@ -135,6 +140,7 @@ const App = () => {
           doctors={doctors}
         />
       )}
+
     </div>
   );
 };
