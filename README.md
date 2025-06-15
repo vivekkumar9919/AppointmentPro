@@ -1,70 +1,106 @@
-# Getting Started with Create React App
+# 🏥 AppointmentPro
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a responsive and modular React-based dashboard for managing doctor appointments. It offers a clean user interface for interacting with appointment data through filtering, form submissions, and pagination. The architecture is designed to support both mock and live API modes, making it suitable for development, testing, and integration phases. With a clear file structure and reusable components, the dashboard is built for scalability and ease of maintenance.
 
-## Available Scripts
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 Getting Started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 1. Clone the Repository
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```
+git clone https://github.com/vivekkumar9919/AppointmentPro
+cd AppointmentPro
+```
 
-### `npm test`
+### 2. Install Dependencies
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+npm install
+```
 
-### `npm run build`
+### 3. Start the Development Server
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🗂️ Project Structure
 
-### `npm run eject`
+```plaintext
+src/
+│
+├── components/                
+│   ├── common/                // Commonly used components
+│   │   ├── StatCards.js       // Dashboard summary cards
+│   │   └── ToastMessage.js    // Reusable Bootstrap toast component
+│   ├── Header.js              // App header with create button
+│   ├── FilterBar.js           // Date and doctor filters
+│   ├── AppointmentForm.js     // Appointment creation modal/form
+│   └── AppointmentList.js     // Displays paginated list of appointments
+│
+├── SampleResponse.js          // Static JSON responses (for dev mode)
+├── main.service.js            // Central API service (includes the isDev flag)
+├── url.js                     // API endpoint constants
+├── Utility/
+│   └── apiClient.js           // HTTP client (Axios) setup and configuration
+│
+├── config.js                  // Configuration values such as DEFAULT_PAGE_SIZE
+├── App.js                     // Root app component
+└── index.js                   // React DOM mount entry point
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+----
+## ✨ Features
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Filter Appointments:**  
+  Filter the appointment list by **doctor** and **date** using a clean filter bar.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **Pagination:**  
+  Seamlessly navigate between pages of appointment data using **Previous** and **Next** buttons.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **Create Appointments:**  
+  Use a modal form to create new appointments quickly and efficiently.
 
-## Learn More
+- **Toast Notifications:**  
+  Show **success** or **error** messages using a reusable Bootstrap toast component.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **Dev/Production Toggle:**  
+  Easily switch between mock data and real API calls using a flag (`isDev`) in `src/main.service.js`:
+  
+  ```
+  const isDev = true; // Set to false to use live API
+  ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## 🧪 Future Enhancements
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- **Appointment Editing and Deletion**  
+  Add support for modifying and removing existing appointments.
 
-### Making a Progressive Web App
+- **Authentication and Role-based Access**  
+  Protect routes and allow role-specific access to dashboard features.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- **Advanced Filtering and Sorting**  
+  Enable filtering by appointment status, time slot, and allow sorting by date or name.
 
-### Advanced Configuration
+- **More Granular Error Handling**  
+  Display more descriptive and context-aware error messages in UI.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## 🔧 Tech Stack
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- **React** for UI
+- **Bootstrap** for styling and responsive components
+- **fetch** (via `apiClient.js`) for API communication
+- **Modular Structure** for scalable and clean codebase
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
