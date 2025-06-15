@@ -46,7 +46,7 @@ src/
 ├── main.service.js            // Central API service (includes the isDev flag)
 ├── url.js                     // API endpoint constants
 ├── Utility/
-│   └── apiClient.js           // HTTP client (Axios) setup and configuration
+│   └── apiClient.js           // HTTP client (fetch) setup and configuration
 │
 ├── config.js                  // Configuration values such as DEFAULT_PAGE_SIZE
 ├── App.js                     // Root app component
